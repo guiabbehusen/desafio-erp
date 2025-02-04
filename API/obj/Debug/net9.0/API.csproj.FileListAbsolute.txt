@@ -32,3 +32,6 @@ C:\Users\guiso\Documents\GitHub\desafio-erp\API\obj\Debug\net9.0\refint\API.dll
 C:\Users\guiso\Documents\GitHub\desafio-erp\API\obj\Debug\net9.0\API.pdb
 C:\Users\guiso\Documents\GitHub\desafio-erp\API\obj\Debug\net9.0\API.genruntimeconfig.cache
 C:\Users\guiso\Documents\GitHub\desafio-erp\API\obj\Debug\net9.0\ref\API.dll
+C:\Users\guiso\Documents\GitHub\desafio-erp\API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\guiso\Documents\GitHub\desafio-erp\API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\guiso\Documents\GitHub\desafio-erp\API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
