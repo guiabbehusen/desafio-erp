@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "js1jRxkHaxA=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\guiso\\Documents\\GitHub\\desafio-erp\\API\\API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\guiso\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.1\\microsoft.aspnetcore.openapi.9.0.1.nupkg.sha512",
+    "C:\\Users\\guiso\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
