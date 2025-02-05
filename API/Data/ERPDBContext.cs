@@ -1,4 +1,5 @@
 using DesafioERP.API.Models;
+using DesafioERP.Data.Map;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -12,7 +13,9 @@ namespace SistemaTarefas.Data
 
         public DbSet<Usuario> Usuarios {get; set;}
         protected override void OnModelCreating(ModelBuilder modelBuilder){
+            modelBuilder.ApplyConfiguration(new UsuarioMap());
             base.OnModelCreating(modelBuilder);
+
         }
 }
 }
