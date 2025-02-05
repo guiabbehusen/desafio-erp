@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DesafioERP.API.Controllers
 {
-    [Route("api/[controller]")]  
+    [Route("api/[controller]")]
     [ApiController]
     public class UsuarioController : ControllerBase
     {
@@ -13,7 +13,7 @@ namespace DesafioERP.API.Controllers
 
         public UsuarioController(IUsuarioRepositorio usuarioRepositorio)
         {
-                    _usuarioRepositorio = usuarioRepositorio;
+            _usuarioRepositorio = usuarioRepositorio;
         }
 
         [HttpGet("{CPF}")]
@@ -24,9 +24,32 @@ namespace DesafioERP.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Usuario>> Cadastrar([FromBody] Usuario usuario){
+        public async Task<ActionResult<Usuario>> Cadastrar([FromBody] Usuario usuario)
+        {
             Usuario usuario1 = await _usuarioRepositorio.CriarUsuario(usuario);
             return Ok(usuario1);
+        }
+
+        [HttpPut("{CPF}")]
+        public async Task<ActionResult<Usuario>> Editar([FromBody] Usuario usuario, string CPF)
+        {
+            usuario.CPF = CPF;
+            Usuario usuario1 = await _usuarioRepositorio.EditarUsuario(usuario, CPF);
+            return Ok(usuario1);
+        }
+
+        [HttpDelete("{CPF}")]
+        public async Task<ActionResult> Apagar(string CPF)
+        {
+            try
+            {
+                var usuario = await _usuarioRepositorio.ApagarUsuario(CPF);
+                return Ok(usuario);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
