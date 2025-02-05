@@ -7,8 +7,8 @@ namespace DesafioERP.API.Models
         public string CPF { get; set; }
 
 
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "O nome deve conter apenas letras e espaços.")]
-        [MinLength(4, ErrorMessage ="O nome deve ter pelo menos 4 caracteres")]
+        //[RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "O nome deve conter apenas letras e espaços.")]
+        //[MinLength(4, ErrorMessage ="O nome deve ter pelo menos 4 caracteres")]
         public string Nome { get; set; }
         public string Email { get; set; }
         public string Telefone { get; set; }
