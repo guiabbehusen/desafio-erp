@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaTarefas.Data;
 
@@ -10,9 +11,11 @@ using SistemaTarefas.Data;
 namespace API.Migrations
 {
     [DbContext(typeof(ERPDBContext))]
-    partial class ERPDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250206183246_AlterarUsuarioCPFParaConfirmaCPF")]
+    partial class AlterarUsuarioCPFParaConfirmaCPF
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +40,10 @@ namespace API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Confirmar_CPF")
+                        .IsRequired()
+                        .HasColumnType("char(11)");
+
                     b.Property<string>("Estado")
                         .IsRequired()
                         .HasMaxLength(2)
@@ -52,13 +59,9 @@ namespace API.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("UsuarioCPF")
-                        .IsRequired()
-                        .HasColumnType("char(11)");
-
                     b.HasKey("CEP");
 
-                    b.HasIndex("UsuarioCPF");
+                    b.HasIndex("Confirmar_CPF");
 
                     b.ToTable("Enderecos", (string)null);
                 });
@@ -72,6 +75,10 @@ namespace API.Migrations
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Endereco")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Login")
                         .IsRequired()
@@ -99,11 +106,13 @@ namespace API.Migrations
 
             modelBuilder.Entity("DesafioERP.API.Models.Endereco", b =>
                 {
-                    b.HasOne("DesafioERP.API.Models.Usuario", null)
+                    b.HasOne("DesafioERP.API.Models.Usuario", "Usuario")
                         .WithMany("Enderecos")
-                        .HasForeignKey("UsuarioCPF")
+                        .HasForeignKey("Confirmar_CPF")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("DesafioERP.API.Models.Usuario", b =>

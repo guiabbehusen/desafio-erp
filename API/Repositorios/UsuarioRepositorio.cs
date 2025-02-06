@@ -16,7 +16,9 @@ namespace DesafioERP.Repositorios
 
         public async Task<Usuario> BuscaPorCPF(string cpf)
         {
-            return await _dbContext.Usuarios.FirstOrDefaultAsync(x => x.CPF == cpf)
+            return await _dbContext.Usuarios
+            .Include(u => u.Enderecos)
+            .FirstOrDefaultAsync(x => x.CPF == cpf)
                 ?? throw new Exception($"Usuário com CPF {cpf} não encontrado.");
         }
 
@@ -49,8 +51,9 @@ namespace DesafioERP.Repositorios
             }
             usuario_busca.Nome = usuario1.Nome;
             usuario_busca.Email = usuario1.Email;
-            usuario_busca.Endereco = usuario1.Endereco;
             usuario_busca.Telefone = usuario1.Telefone;
+
+            usuario_busca.Enderecos = usuario1.Enderecos;
 
             _dbContext.Usuarios.Update(usuario_busca);
             await _dbContext.SaveChangesAsync();

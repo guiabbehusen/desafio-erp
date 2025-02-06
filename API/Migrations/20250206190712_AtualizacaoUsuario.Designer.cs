@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaTarefas.Data;
 
@@ -10,9 +11,11 @@ using SistemaTarefas.Data;
 namespace API.Migrations
 {
     [DbContext(typeof(ERPDBContext))]
-    partial class ERPDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250206190712_AtualizacaoUsuario")]
+    partial class AtualizacaoUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,11 +102,13 @@ namespace API.Migrations
 
             modelBuilder.Entity("DesafioERP.API.Models.Endereco", b =>
                 {
-                    b.HasOne("DesafioERP.API.Models.Usuario", null)
+                    b.HasOne("DesafioERP.API.Models.Usuario", "Usuario")
                         .WithMany("Enderecos")
                         .HasForeignKey("UsuarioCPF")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("DesafioERP.API.Models.Usuario", b =>

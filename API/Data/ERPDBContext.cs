@@ -12,8 +12,11 @@ namespace SistemaTarefas.Data
         }
 
         public DbSet<Usuario> Usuarios {get; set;}
+        public DbSet<Endereco> Enderecos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder){
             modelBuilder.ApplyConfiguration(new UsuarioMap());
+            modelBuilder.ApplyConfiguration(new EnderecoMap());
             base.OnModelCreating(modelBuilder);
 
         }

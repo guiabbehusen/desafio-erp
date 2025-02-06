@@ -5,7 +5,9 @@ using DesafioERP.API.Models;
 using SistemaTarefas.Data;
 using Microsoft.Extensions.Options;
 using DesafioERP.Repositorios.Interfaces;
-using DesafioERP.Repositorios; // Certifique-se de usar o namespace correto
+using DesafioERP.Repositorios;
+using DesafioERP.API.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,9 @@ builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<IEnderecoRepositorio, EnderecoRepositorio>();
+
 
 var app = builder.Build();
 
