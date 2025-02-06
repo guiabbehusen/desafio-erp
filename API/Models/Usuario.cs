@@ -13,6 +13,7 @@ namespace DesafioERP.API.Models
         public string? Endereco { get; set; }
         public required string Senha { get; set; }
         public required string Login {get; set;}
+        public ICollection<Endereco> Enderecos { get; set; } = new List<Endereco>();
 
         public Usuario() { }
 
