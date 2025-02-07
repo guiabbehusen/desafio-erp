@@ -9,20 +9,18 @@ using DesafioERP.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ 1️⃣ Configurar CORS ANTES do `builder.Build()`
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000") // Troque pela URL do seu React
+            policy.WithOrigins("http://localhost:3000")
                   .AllowAnyMethod()
                   .AllowAnyHeader()
                   .AllowCredentials();
         });
 });
 
-// ✅ 2️⃣ Configurar o banco de dados e serviços
 builder.Services.AddDbContext<ERPDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -36,7 +34,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// ✅ 3️⃣ Aplicar CORS ANTES de mapear os controladores
 app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
@@ -46,6 +43,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
-app.MapGet("/", () => "API rodando com sucesso! 🚀");
+app.MapGet("/api", () => "API rodando com sucesso! 🚀");
 
 app.Run();
