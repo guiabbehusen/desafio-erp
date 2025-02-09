@@ -25,9 +25,14 @@ builder.Services.AddDbContext<ERPDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
+
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddScoped<IEnderecoRepositorio, EnderecoRepositorio>();
+builder.Services.AddScoped<UsuarioRepositorio>();
+
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<LoginService>();
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

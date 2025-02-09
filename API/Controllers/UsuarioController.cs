@@ -12,12 +12,15 @@ namespace DesafioERP.API.Controllers
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly IEnderecoRepositorio _enderecoRepositorio;
         private readonly UsuarioService _usuarioService;
+        private readonly LoginService _loginService;
 
-        public UsuarioController(IUsuarioRepositorio usuarioRepositorio, IEnderecoRepositorio enderecoRepositorio, UsuarioService usuarioService)
+        public UsuarioController(IUsuarioRepositorio usuarioRepositorio, IEnderecoRepositorio enderecoRepositorio, UsuarioService usuarioService, LoginService loginService)
         {
             _usuarioRepositorio = usuarioRepositorio;
             _usuarioService = usuarioService;
             _enderecoRepositorio = enderecoRepositorio;
+            _loginService =  loginService;
+
         }
 
         [HttpGet("{CPF}")]
@@ -36,6 +39,7 @@ namespace DesafioERP.API.Controllers
             {
                 return BadRequest(erros);
             }
+            usuario.Senha = _loginService.CriptografarSenha(usuario.Senha);
             Usuario usuarioCriado = await _usuarioRepositorio.CriarUsuario(usuario);
             return Ok(usuarioCriado);
         }

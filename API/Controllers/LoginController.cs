@@ -33,8 +33,23 @@ namespace DesafioERP.API.Controllers
             _loginService = loginService;
         }
 
+        [HttpPost]
+        public async Task<ActionResult<string>> Login([FromBody] Usuario usuario)
+        {
+            if (usuario == null || string.IsNullOrEmpty(usuario.Login) || string.IsNullOrEmpty(usuario.Senha))
+            {
+                return BadRequest("Usuário e senha são obrigatórios.");
+            }
 
-        // [HttpPost("login")]
-        // public ActionResult<Usuario>
+            bool loginValido = await _loginService.ValidarLogin(usuario.Login, usuario.Senha);
+
+            if (!loginValido)
+            {
+                return Unauthorized("Usuário ou senha inválidos.");
+            }
+
+            return Ok("Login realizado com sucesso.");
+        }
+
     }
 }
