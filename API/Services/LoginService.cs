@@ -33,7 +33,7 @@ namespace DesafioERP.API.Services
         }
 
         public async Task<bool> ValidarLogin(string usuario_fornecido, string senha_fornecida)
-        {
+        { 
             var usuario = await _usuarioRepositorio.BuscaPorLogin(usuario_fornecido);
 
             if (usuario == null)

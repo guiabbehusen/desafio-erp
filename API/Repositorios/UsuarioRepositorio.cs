@@ -40,7 +40,7 @@ namespace DesafioERP.Repositorios
             var usuario_busca = await BuscaPorCPF(CPF);
             if (usuario_busca == null)
             {
-                throw new Exception($"Usuario de CPF: {CPF} não encontrado.");
+                throw new Exception($"Usuário de CPF: {CPF} não encontrado.");
             }
             _dbContext.Remove(usuario_busca);
             await _dbContext.SaveChangesAsync();
@@ -60,19 +60,21 @@ namespace DesafioERP.Repositorios
             var usuario_busca = await BuscaPorCPF(CPF);
             if (usuario_busca == null)
             {
-                throw new Exception($"Usuario para o CPF: {CPF} Não foi encontrado.");
+                throw new Exception($"Usuário para o CPF: {CPF} Não foi encontrado.");
             }
-            
-            usuario_busca.Nome = usuario1.Nome;
-            usuario_busca.Email = usuario1.Email;
-            usuario_busca.Telefone = usuario1.Telefone;
 
-            usuario_busca.Enderecos = usuario1.Enderecos;
+            if (!string.IsNullOrEmpty(usuario1.Nome)) usuario_busca.Nome = usuario1.Nome;
+            if (!string.IsNullOrEmpty(usuario1.Email)) usuario_busca.Email = usuario1.Email;
+            if (!string.IsNullOrEmpty(usuario1.Telefone)) usuario_busca.Telefone = usuario1.Telefone;
+
+            if (usuario1.Enderecos != null && usuario1.Enderecos.Any())
+            {
+                usuario_busca.Enderecos = usuario1.Enderecos;
+            }
 
             _dbContext.Usuarios.Update(usuario_busca);
             await _dbContext.SaveChangesAsync();
             return usuario_busca;
-
         }
     }
 }

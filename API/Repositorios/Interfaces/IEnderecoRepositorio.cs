@@ -5,8 +5,7 @@ namespace DesafioERP.Repositorios.Interfaces
         Task<Endereco> AdicionarEndereco(Endereco endereco);
         Task<Endereco> BuscarEnderecoPorCEP(string CEP);
         Task<Endereco> EditarEndereco(Endereco endereco);
-        Task<Endereco> DeletarEndereco(string CEP);
+        Task<Endereco> DeletarEndereco(string CPF, string CEP);
         Task<List<Endereco>> BuscarEnderecosPorCPF(string CPF);
-
     }
 }

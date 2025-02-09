@@ -19,8 +19,7 @@ namespace DesafioERP.API.Controllers
             _usuarioRepositorio = usuarioRepositorio;
             _usuarioService = usuarioService;
             _enderecoRepositorio = enderecoRepositorio;
-            _loginService =  loginService;
-
+            _loginService = loginService;
         }
 
         [HttpGet("{CPF}")]
@@ -46,8 +45,12 @@ namespace DesafioERP.API.Controllers
         [HttpPut("{CPF}")]
         public async Task<ActionResult<Usuario>> Editar([FromBody] Usuario usuario, string CPF)
         {
-            usuario.CPF = CPF;
-            Usuario usuario1 = await _usuarioRepositorio.EditarUsuario(usuario, CPF);
+            var usuarioAtualizado = await _usuarioService.EditarUsuario(usuario, CPF);
+            if (usuarioAtualizado == null)
+            {
+                return NotFound("Usuário não encontrado.");
+            }
+            var usuario1 = await _usuarioRepositorio.EditarUsuario(usuarioAtualizado, CPF);
             return Ok(usuario1);
         }
 
@@ -76,11 +79,27 @@ namespace DesafioERP.API.Controllers
 
             if (_usuarioService.ValidarEndereco(endereco.Rua, endereco.Numero, endereco.Bairro, endereco.Cidade, endereco.Estado, endereco.CEP))
             {
-
                 var enderecoCriado = await _enderecoRepositorio.AdicionarEndereco(endereco);
                 return Ok(enderecoCriado);
             }
             return BadRequest("Endereço inválido. Todos os campos devem ser preenchidos e o CEP deve estar no formato correto.");
         }
+
+        [HttpDelete("deletar_endereco/{CPF}/{CEP}")]
+        public async Task<ActionResult> DeletarEndereco(string CPF, string CEP)
+        {
+            try
+            {
+                var enderecoRemovido = await _enderecoRepositorio.DeletarEndereco(CPF, CEP);
+                return Ok($"Endereço com CEP {CEP} removido com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+
+
     }
 }

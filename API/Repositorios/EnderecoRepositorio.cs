@@ -16,12 +16,12 @@ namespace DesafioERP.Repositorios
 
         public async Task<Endereco> AdicionarEndereco(Endereco endereco)
         {
-            if (endereco.UsuarioCPF == null)  
+            if (endereco.UsuarioCPF == null)
             {
                 throw new Exception("O CPF do usuário é necessário para adicionar o endereço.");
             }
 
-            var usuarioExistente = await _dbContext.Usuarios.FirstOrDefaultAsync(u => u.CPF == endereco.UsuarioCPF);  
+            var usuarioExistente = await _dbContext.Usuarios.FirstOrDefaultAsync(u => u.CPF == endereco.UsuarioCPF);
             if (usuarioExistente == null)
             {
                 throw new Exception($"Usuário com CPF {endereco.UsuarioCPF} não encontrado.");
@@ -48,11 +48,22 @@ namespace DesafioERP.Repositorios
             if (enderecoExistente == null)
                 throw new Exception($"Endereço com CEP {endereco.CEP} não encontrado.");
 
-            enderecoExistente.Rua = endereco.Rua;
-            enderecoExistente.Numero = endereco.Numero;
-            enderecoExistente.Bairro = endereco.Bairro;
-            enderecoExistente.Cidade = endereco.Cidade;
-            enderecoExistente.Estado = endereco.Estado;
+            if (!string.IsNullOrEmpty(endereco.Rua))
+                enderecoExistente.Rua = endereco.Rua;
+            if (!string.IsNullOrEmpty(endereco.Numero))
+                enderecoExistente.Numero = endereco.Numero;
+            if (!string.IsNullOrEmpty(endereco.Bairro))
+                enderecoExistente.Bairro = endereco.Bairro;
+            if (!string.IsNullOrEmpty(endereco.Cidade))
+                enderecoExistente.Cidade = endereco.Cidade;
+
+            if (!string.IsNullOrEmpty(endereco.Estado))
+            {
+                if (endereco.Estado.Length == 2)
+                    enderecoExistente.Estado = endereco.Estado;
+                else
+                    throw new Exception("O campo 'Estado' deve ter apenas 2 caracteres.");
+            }
 
             _dbContext.Enderecos.Update(enderecoExistente);
             await _dbContext.SaveChangesAsync();
@@ -60,11 +71,12 @@ namespace DesafioERP.Repositorios
             return enderecoExistente;
         }
 
-        public async Task<Endereco> DeletarEndereco(string CEP)
+        public async Task<Endereco> DeletarEndereco(string CPF, string CEP)
         {
-            var endereco = await _dbContext.Enderecos.FirstOrDefaultAsync(e => e.CEP == CEP);
+            var endereco = await _dbContext.Enderecos.FirstOrDefaultAsync(e => e.CEP == CEP && e.UsuarioCPF == CPF);
+
             if (endereco == null)
-                throw new Exception($"Endereço com CEP {CEP} não encontrado.");
+                throw new Exception($"Endereço com CEP {CEP} não encontrado para o usuário com CPF {CPF}.");
 
             _dbContext.Enderecos.Remove(endereco);
             await _dbContext.SaveChangesAsync();
@@ -72,10 +84,12 @@ namespace DesafioERP.Repositorios
             return endereco;
         }
 
+
+
         public async Task<List<Endereco>> BuscarEnderecosPorCPF(string CPF)
         {
             return await _dbContext.Enderecos
-                .Where(e => e.UsuarioCPF == CPF)  
+                .Where(e => e.UsuarioCPF == CPF)
                 .ToListAsync();
         }
     }

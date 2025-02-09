@@ -3,15 +3,14 @@ using DesafioERP.API.Models;
 using DesafioERP.Repositorios;
 using DesafioERP.Repositorios.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace DesafioERP.API.Services
 {
-
     public class UsuarioService
     {
         private readonly LoginService _loginService;
         private readonly UsuarioRepositorio _usuarioRepositorio;
+
         public UsuarioService(LoginService loginService, UsuarioRepositorio usuarioRepositorio)
         {
             _loginService = loginService;
@@ -25,7 +24,7 @@ namespace DesafioERP.API.Services
                 erros.Add("CPF inválido.");
 
             if (!ValidarNome(usuario.Nome))
-                erros.Add("O nome deve conter pelo menos 4 caracteres e conter apenas letras e espaços. ");
+                erros.Add("O nome deve conter pelo menos 4 caracteres e conter apenas letras e espaços.");
 
             if (!ValidarEmail(usuario.Email))
                 erros.Add("E-mail inválido.");
@@ -43,9 +42,10 @@ namespace DesafioERP.API.Services
                     erros.Add("Endereço inválido. Todos os campos devem ser preenchidos e o CEP deve estar no formato correto.");
                 }
             }
-            return erros;
 
+            return erros;
         }
+
         public bool ValidarCPF(string cpf)
         {
             cpf = cpf.Replace(".", "").Replace("-", "");
@@ -53,6 +53,7 @@ namespace DesafioERP.API.Services
                 return false;
             return true;
         }
+
         public bool ValidarNome(string nome)
         {
             if (nome.Length < 4 || !Regex.IsMatch(nome, @"^[a-zA-Z\s]+$"))
@@ -81,6 +82,7 @@ namespace DesafioERP.API.Services
             _loginService.CriptografarSenha(senha);
             return true;
         }
+
         public bool ValidarEndereco(string rua, string numero, string bairro, string cidade, string estado, string cep)
         {
             if (string.IsNullOrEmpty(rua) || string.IsNullOrEmpty(numero) || string.IsNullOrEmpty(bairro) ||
@@ -96,30 +98,31 @@ namespace DesafioERP.API.Services
 
             return true;
         }
+
         public async Task<Usuario> EditarUsuario([FromBody] Usuario usuario1, string CPF)
         {
             var usuario_busca = await _usuarioRepositorio.BuscaPorCPF(CPF);
             if (usuario_busca == null)
             {
-                throw new Exception($"Usuario para o CPF: {CPF} Não foi encontrado.");
+                throw new Exception($"Usuário para o CPF: {CPF} Não foi encontrado.");
             }
+
             var erros = ValidarCadastro(usuario1);
             if (erros.Count != 0)
             {
                 usuario_busca.Nome = usuario1.Nome;
                 usuario_busca.Email = usuario1.Email;
                 usuario_busca.Telefone = usuario1.Telefone;
+
                 if (usuario_busca.Senha != usuario1.Senha)
                 {
                     usuario_busca.Senha = _loginService.CriptografarSenha(usuario1.Senha);
-
                 }
+
+                usuario_busca.Enderecos = usuario1.Enderecos;
             }
 
-            usuario_busca.Enderecos = usuario1.Enderecos;
-
             return usuario_busca;
-
         }
     }
 }
