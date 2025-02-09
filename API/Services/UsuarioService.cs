@@ -1,5 +1,8 @@
 using System.Text.RegularExpressions;
 using DesafioERP.API.Models;
+using DesafioERP.Repositorios;
+using DesafioERP.Repositorios.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace DesafioERP.API.Services
@@ -8,9 +11,11 @@ namespace DesafioERP.API.Services
     public class UsuarioService
     {
         private readonly LoginService _loginService;
-        public UsuarioService(LoginService loginService)
+        private readonly UsuarioRepositorio _usuarioRepositorio;
+        public UsuarioService(LoginService loginService, UsuarioRepositorio usuarioRepositorio)
         {
             _loginService = loginService;
+            _usuarioRepositorio = usuarioRepositorio;
         }
 
         public List<string> ValidarCadastro(Usuario usuario)
@@ -90,6 +95,31 @@ namespace DesafioERP.API.Services
             }
 
             return true;
+        }
+        public async Task<Usuario> EditarUsuario([FromBody] Usuario usuario1, string CPF)
+        {
+            var usuario_busca = await _usuarioRepositorio.BuscaPorCPF(CPF);
+            if (usuario_busca == null)
+            {
+                throw new Exception($"Usuario para o CPF: {CPF} Não foi encontrado.");
+            }
+            var erros = ValidarCadastro(usuario1);
+            if (erros.Count != 0)
+            {
+                usuario_busca.Nome = usuario1.Nome;
+                usuario_busca.Email = usuario1.Email;
+                usuario_busca.Telefone = usuario1.Telefone;
+                if (usuario_busca.Senha != usuario1.Senha)
+                {
+                    usuario_busca.Senha = _loginService.CriptografarSenha(usuario1.Senha);
+
+                }
+            }
+
+            usuario_busca.Enderecos = usuario1.Enderecos;
+
+            return usuario_busca;
+
         }
     }
 }

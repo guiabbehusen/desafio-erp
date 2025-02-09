@@ -33,7 +33,6 @@ namespace DesafioERP.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Usuario>> Cadastrar([FromBody] Usuario usuario)
         {
-
             var erros = _usuarioService.ValidarCadastro(usuario);
             if (erros.Count != 0)
             {

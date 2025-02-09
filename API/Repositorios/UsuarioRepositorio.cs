@@ -62,6 +62,7 @@ namespace DesafioERP.Repositorios
             {
                 throw new Exception($"Usuario para o CPF: {CPF} Não foi encontrado.");
             }
+            
             usuario_busca.Nome = usuario1.Nome;
             usuario_busca.Email = usuario1.Email;
             usuario_busca.Telefone = usuario1.Telefone;
