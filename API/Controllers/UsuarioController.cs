@@ -30,31 +30,13 @@ namespace DesafioERP.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Usuario>> Cadastrar([FromBody] Usuario usuario)
         {
-            if (!_usuarioService.ValidarCPF(usuario.CPF))
-                return BadRequest("CPF inválido.");
 
-            if (!_usuarioService.ValidarNome(usuario.Nome))
-                return BadRequest("O nome deve conter pelo menos 4 caracteres e conter apenas letras e espaços. ");
-
-            if (!_usuarioService.ValidarEmail(usuario.Email))
-                return BadRequest("E-mail inválido.");
-
-            if (!_usuarioService.ValidarTelefone(usuario.Telefone))
-                return BadRequest("Telefone inválido.");
-
-            if (!_usuarioService.ValidarSenha(usuario.Senha))
-                return BadRequest("Senha inválida. A senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais.");
-
-            foreach (var endereco in usuario.Enderecos)
+            var erros = _usuarioService.ValidarCadastro(usuario);
+            if (erros.Count != 0)
             {
-                if (!_usuarioService.ValidarEndereco(endereco.Rua, endereco.Numero, endereco.Bairro, endereco.Cidade, endereco.Estado, endereco.CEP))
-                {
-                    return BadRequest("Endereço inválido. Todos os campos devem ser preenchidos e o CEP deve estar no formato correto.");
-                }
+                return BadRequest(erros);
             }
-
             Usuario usuarioCriado = await _usuarioRepositorio.CriarUsuario(usuario);
-
             return Ok(usuarioCriado);
         }
 
@@ -89,12 +71,13 @@ namespace DesafioERP.API.Controllers
 
             endereco.UsuarioCPF = CPF;
 
+            if (_usuarioService.ValidarEndereco(endereco.Rua, endereco.Numero, endereco.Bairro, endereco.Cidade, endereco.Estado, endereco.CEP))
+            {
 
-            if (!_usuarioService.ValidarEndereco(endereco.Rua, endereco.Numero, endereco.Bairro, endereco.Cidade, endereco.Estado, endereco.CEP))
-                return BadRequest("Endereço inválido. Todos os campos devem ser preenchidos e o CEP deve estar no formato correto.");
-
-            var enderecoCriado = await _enderecoRepositorio.AdicionarEndereco(endereco);
-            return Ok(enderecoCriado);
+                var enderecoCriado = await _enderecoRepositorio.AdicionarEndereco(endereco);
+                return Ok(enderecoCriado);
+            }
+            return BadRequest("Endereço inválido. Todos os campos devem ser preenchidos e o CEP deve estar no formato correto.");
         }
     }
 }

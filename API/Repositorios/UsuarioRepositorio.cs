@@ -7,11 +7,24 @@ namespace DesafioERP.Repositorios
 {
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
-        private const bool V = true;
         private readonly ERPDBContext _dbContext;
         public UsuarioRepositorio(ERPDBContext erpdbcontext)
         {
             _dbContext = erpdbcontext;
+        }
+
+        public async Task<Usuario> BuscaPorLogin(string login)
+        {
+            var usuario = await _dbContext.Usuarios
+                .Include(u => u.Enderecos)
+                .FirstOrDefaultAsync(x => x.Login == login);
+
+            if (usuario == null)
+            {
+                throw new Exception("Login inválido.");
+            }
+
+            return usuario;
         }
 
         public async Task<Usuario> BuscaPorCPF(string cpf)

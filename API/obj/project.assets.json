@@ -47,6 +47,18 @@
           }
         }
       },
+      "CryptoMJ/1.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/CryptoMJ.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/CryptoMJ.dll": {}
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -1861,6 +1873,19 @@
         "azureicon.png",
         "lib/netstandard2.0/Azure.Identity.dll",
         "lib/netstandard2.0/Azure.Identity.xml"
+      ]
+    },
+    "CryptoMJ/1.1.0": {
+      "sha512": "H0Slwq0soefrrmlQnxPPWyggtG3Ztv8SRkbLapqAGFmEAPH9OfJb5KkA5S7rZ45sVx53PzqR/LJTTm4x1fwsAA==",
+      "type": "package",
+      "path": "cryptomj/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "cryptomj.1.1.0.nupkg.sha512",
+        "cryptomj.nuspec",
+        "lib/netstandard2.1/CryptoMJ.dll"
       ]
     },
     "Humanizer.Core/2.14.1": {
@@ -5397,6 +5422,7 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
+      "CryptoMJ >= 1.1.0",
       "Microsoft.AspNetCore.Cors >= 2.3.0",
       "Microsoft.AspNetCore.OpenApi >= 9.0.1",
       "Microsoft.EntityFrameworkCore >= 9.0.1",
@@ -5449,6 +5475,10 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
+          "CryptoMJ": {
+            "target": "Package",
+            "version": "[1.1.0, )"
+          },
           "Microsoft.AspNetCore.Cors": {
             "target": "Package",
             "version": "[2.3.0, )"

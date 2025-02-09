@@ -12,3 +12,29 @@
 
 // cadatro do usuario 
 // receber a senha 1234546 e fazer o hash
+
+
+using DesafioERP.API.Models;
+using DesafioERP.API.Services;
+using DesafioERP.Repositorios.Interfaces;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
+
+namespace DesafioERP.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class LoginController : ControllerBase
+    {
+        private readonly LoginService _loginService;
+
+        public LoginController(LoginService loginService)
+        {
+            _loginService = loginService;
+        }
+
+
+        // [HttpPost("login")]
+        // public ActionResult<Usuario>
+    }
+}
