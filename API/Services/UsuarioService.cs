@@ -123,66 +123,39 @@ namespace DesafioERP.API.Services
             {
                 return null;
             }
-
-            if (!string.IsNullOrEmpty(usuario.Nome) && usuario.Nome != usuarioExistente.Nome)
+            try
             {
-                if (ValidarNome(usuario.Nome))
-                {
-                    usuarioExistente.Nome = usuario.Nome;
-                }
+                ValidarNome(usuario.Nome);
+                usuarioExistente.Nome = usuario.Nome;
             }
-
-            if (!string.IsNullOrEmpty(usuario.Email) && usuario.Email != usuarioExistente.Email)
+            catch (System.Exception)
             {
-                if (ValidarEmail(usuario.Email))
-                {
-                    usuarioExistente.Email = usuario.Email;
-                }
+
+                throw new Exception("Nome inválido. Deve conter no mínimo 4 caracteres.");
             }
-
-            if (!string.IsNullOrEmpty(usuario.Telefone) && usuario.Telefone != usuarioExistente.Telefone)
+            try
             {
-                if (ValidarTelefone(usuario.Telefone))
-                {
-                    usuarioExistente.Telefone = usuario.Telefone;
-                }
+                ValidarEmail(usuario.Email);
+                usuarioExistente.Email = usuario.Email;
             }
-
-            if (!string.IsNullOrEmpty(usuario.Senha) && usuario.Senha != usuarioExistente.Senha)
+            catch (System.Exception)
             {
-                if (ValidarSenha(usuario.Senha))
-                {
-                    usuarioExistente.Senha = _loginService.CriptografarSenha(usuario.Senha);
-                }
+
+                throw new Exception("Email inválido. Ex: email@email.com");
             }
-
-            if (usuario.Enderecos != null && usuario.Enderecos.Any())
+            try
             {
-                var enderecosValidos = new List<Endereco>();
+                ValidarTelefone(usuario.Telefone);
+                usuarioExistente.Telefone = usuario.Telefone;
+            }
+            catch (System.Exception)
+            {
 
-                foreach (var endereco in usuario.Enderecos)
-                {
-                    if (ValidarEndereco(endereco.Rua, endereco.Numero, endereco.Bairro, endereco.Cidade, endereco.Estado, endereco.CEP))
-                    {
-                        endereco.UsuarioCPF = CPF;
-                        enderecosValidos.Add(endereco);
-                    }
-                }
-
-                if (enderecosValidos.Any())
-                {
-                    usuarioExistente.Enderecos = enderecosValidos;
-                }
+                throw new Exception("Telefone inválido. Ex: (12) 93456-7890");
             }
 
             return usuarioExistente;
         }
-
-
-
-
-
-
 
     }
 }
