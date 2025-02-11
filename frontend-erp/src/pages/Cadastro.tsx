@@ -20,7 +20,7 @@ export const Cadastro: React.FC = () => {
 
     async function handleCadastro(event: React.FormEvent) {
         event.preventDefault();
-//SenhaSegura12@
+
         try {
             const resposta = await api.post('/api/Usuario', {
                 "Nome": nome,
@@ -40,21 +40,8 @@ export const Cadastro: React.FC = () => {
                 }]
             });
 
-            if (resposta.status === 201) {
-                const usuarioResponse = await api.post('/api/Usuario', {
-                    "Nome": nome,
-                    "CPF": cpf,
-                    "Email": email,
-                    "Telefone": telefone,
-                    "Login": usuario,
-                    "Senha": password
-                });
-
-                if (usuarioResponse.status === 200) {
-                    navigate('/home', { state: { usuario: usuario } });
-                } else {
-                    setBackendError("Erro ao salvar os dados do usuário.");
-                }
+            if (resposta.status === 200) {
+                navigate('/');
             } else {
                 setBackendError("Erro ao cadastrar usuário.");
             }

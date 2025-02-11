@@ -31,7 +31,7 @@ namespace DesafioERP.API.Services
 
         public async Task<bool> ValidarLogin(string usuario_fornecido, string senha_fornecida)
         {
-            var usuario = await _usuarioRepositorio.BuscaPorLogin(usuario_fornecido);
+            var usuario = await _usuarioRepositorio.BuscaPorLogin(usuario_fornecido); 
 
             if (usuario == null)
             {
@@ -39,6 +39,11 @@ namespace DesafioERP.API.Services
             }
 
             string senha_criptografada = CriptografarSenha(senha_fornecida);
+
+            Console.WriteLine("senha_criptografada", senha_criptografada);
+            Console.WriteLine("usuario.Senha", usuario.Senha);
+
+
 
             return usuario.Senha == senha_criptografada;
         }

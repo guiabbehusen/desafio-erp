@@ -15,3 +15,9 @@ export interface UsuarioProps {
     login: string;
     enderecos: EnderecoProps[];
 }
+
+export interface EditarUsuarioProps {
+    nome: string;
+    email: string;
+    telefone: string;
+}

@@ -32,15 +32,18 @@ namespace DesafioERP.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Usuario>> Cadastrar([FromBody] Usuario usuario)
         {
-            var erros = _usuarioService.ValidarCadastro(usuario);
+            var erros = await _usuarioService.ValidarCadastro(usuario);
             if (erros.Count != 0)
             {
                 return BadRequest(erros);
             }
+
             usuario.Senha = _loginService.CriptografarSenha(usuario.Senha);
             Usuario usuarioCriado = await _usuarioRepositorio.CriarUsuario(usuario);
+
             return Ok(usuarioCriado);
         }
+
 
 
         [HttpPut("{CPF}")]

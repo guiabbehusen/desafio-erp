@@ -7,7 +7,9 @@ public class EnderecoMap : IEntityTypeConfiguration<Endereco>
     public void Configure(EntityTypeBuilder<Endereco> builder)
     {
         builder.ToTable("Enderecos");
-        builder.HasKey(e => e.CEP);
+        builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id)
+               .ValueGeneratedOnAdd();
 
         builder.Property(e => e.CEP).IsRequired().HasMaxLength(9);
         builder.Property(e => e.Rua).IsRequired().HasMaxLength(100);

@@ -32,15 +32,15 @@ namespace DesafioERP.Repositorios
             return endereco;
         }
 
-        public async Task<Endereco> BuscarEnderecoPorCEP(string CEP)
-        {
-            var endereco = await _dbContext.Enderecos.FirstOrDefaultAsync(e => e.CEP == CEP);
-            if (endereco == null)
-            {
-                throw new Exception($"Endereço com o CEP {CEP} não encontrado.");
-            }
-            return endereco;
-        }
+        // public async Task<Endereco> BuscarEnderecoPorCEP(string CEP)
+        // {
+        //     var endereco = await _dbContext.Enderecos.FirstOrDefaultAsync(e => e.CEP == CEP);
+        //     if (endereco == null)
+        //     {
+        //         throw new Exception($"Endereço com o CEP {CEP} não encontrado.");
+        //     }
+        //     return endereco;
+        // }
 
         public async Task<Endereco> EditarEndereco(Endereco endereco)
         {

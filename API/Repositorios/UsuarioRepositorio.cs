@@ -16,25 +16,19 @@ namespace DesafioERP.Repositorios
 
         public async Task<Usuario> BuscaPorLogin(string login)
         {
-            var usuario = await _dbContext.Usuarios
+            return await _dbContext.Usuarios
                 .Include(u => u.Enderecos)
                 .FirstOrDefaultAsync(x => x.Login == login);
-
-            if (usuario == null)
-            {
-                throw new Exception("Login inválido.");
-            }
-
-            return usuario;
         }
 
         public async Task<Usuario> BuscaPorCPF(string cpf)
         {
             return await _dbContext.Usuarios
                 .Include(u => u.Enderecos)
-                .FirstOrDefaultAsync(x => x.CPF == cpf)
-                ?? throw new Exception($"Usuário com CPF {cpf} não encontrado.");
+                .FirstOrDefaultAsync(x => x.CPF == cpf);
         }
+
+
 
         public async Task<Usuario> ApagarUsuario(string CPF)
         {

@@ -18,11 +18,11 @@ namespace DesafioERP.API.Services
             _usuarioRepositorio = usuarioRepositorio;
         }
 
-        public List<string> ValidarCadastro(Usuario usuario)
+        public async Task<List<string>> ValidarCadastro(Usuario usuario)
         {
             var erros = new List<string>();
 
-            var usuarioExistente = _usuarioRepositorio.BuscaPorCPF(usuario.CPF).Result;
+            var usuarioExistente = await _usuarioRepositorio.BuscaPorCPF(usuario.CPF);
             if (usuarioExistente != null)
             {
                 erros.Add("Já existe um usuário com este CPF cadastrado.");
@@ -53,6 +53,8 @@ namespace DesafioERP.API.Services
 
             return erros;
         }
+
+
 
 
         public bool ValidarCPF(string cpf)
