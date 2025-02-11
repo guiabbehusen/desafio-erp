@@ -1,6 +1,3 @@
-using System;
-using System.Text;
-using System.Threading.Tasks;
 using CryptoMJ;
 using CryptoMJ.Methods;
 using DesafioERP.API.Models;
@@ -33,17 +30,29 @@ namespace DesafioERP.API.Services
         }
 
         public async Task<bool> ValidarLogin(string usuario_fornecido, string senha_fornecida)
-        { 
+        {
             var usuario = await _usuarioRepositorio.BuscaPorLogin(usuario_fornecido);
 
             if (usuario == null)
             {
-                return false; 
+                return false;
             }
 
             string senha_criptografada = CriptografarSenha(senha_fornecida);
 
             return usuario.Senha == senha_criptografada;
+        }
+
+        public async Task<string> ObterCPFPorLogin(string login)
+        {
+            var usuario = await _usuarioRepositorio.BuscaPorLogin(login);
+
+            if (usuario != null)
+            {
+                return usuario.CPF;
+            }
+
+            throw new Exception("Usuário não encontrado.");
         }
     }
 }

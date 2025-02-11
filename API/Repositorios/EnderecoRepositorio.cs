@@ -84,8 +84,6 @@ namespace DesafioERP.Repositorios
             return endereco;
         }
 
-
-
         public async Task<List<Endereco>> BuscarEnderecosPorCPF(string CPF)
         {
             return await _dbContext.Enderecos

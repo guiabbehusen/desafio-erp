@@ -8,6 +8,7 @@ namespace DesafioERP.Repositorios
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
         private readonly ERPDBContext _dbContext;
+
         public UsuarioRepositorio(ERPDBContext erpdbcontext)
         {
             _dbContext = erpdbcontext;
@@ -30,8 +31,8 @@ namespace DesafioERP.Repositorios
         public async Task<Usuario> BuscaPorCPF(string cpf)
         {
             return await _dbContext.Usuarios
-            .Include(u => u.Enderecos)
-            .FirstOrDefaultAsync(x => x.CPF == cpf)
+                .Include(u => u.Enderecos)
+                .FirstOrDefaultAsync(x => x.CPF == cpf)
                 ?? throw new Exception($"Usuário com CPF {cpf} não encontrado.");
         }
 
@@ -55,26 +56,25 @@ namespace DesafioERP.Repositorios
             return usuario1;
         }
 
-        public async Task<Usuario> EditarUsuario(Usuario usuario1, string CPF)
+        public async Task<Usuario> EditarUsuario(Usuario usuario, string CPF)
         {
-            var usuario_busca = await BuscaPorCPF(CPF);
-            if (usuario_busca == null)
+            var usuarioExistente = await _dbContext.Usuarios
+                                                 .Where(u => u.CPF == CPF)
+                                                 .FirstOrDefaultAsync();
+
+            if (usuarioExistente == null)
             {
-                throw new Exception($"Usuário para o CPF: {CPF} Não foi encontrado.");
+                return null;
             }
 
-            if (!string.IsNullOrEmpty(usuario1.Nome)) usuario_busca.Nome = usuario1.Nome;
-            if (!string.IsNullOrEmpty(usuario1.Email)) usuario_busca.Email = usuario1.Email;
-            if (!string.IsNullOrEmpty(usuario1.Telefone)) usuario_busca.Telefone = usuario1.Telefone;
+            usuarioExistente.Nome = usuario.Nome;
+            usuarioExistente.Email = usuario.Email;
+            usuarioExistente.Telefone = usuario.Telefone;
+            usuarioExistente.Senha = usuario.Senha;
 
-            if (usuario1.Enderecos != null && usuario1.Enderecos.Any())
-            {
-                usuario_busca.Enderecos = usuario1.Enderecos;
-            }
-
-            _dbContext.Usuarios.Update(usuario_busca);
             await _dbContext.SaveChangesAsync();
-            return usuario_busca;
+
+            return usuarioExistente;
         }
     }
 }

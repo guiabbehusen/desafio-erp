@@ -20,6 +20,13 @@ namespace DesafioERP.API.Services
         public List<string> ValidarCadastro(Usuario usuario)
         {
             var erros = new List<string>();
+
+            var usuarioExistente = _usuarioRepositorio.BuscaPorCPF(usuario.CPF).Result;
+            if (usuarioExistente != null)
+            {
+                erros.Add("Já existe um usuário com este CPF cadastrado.");
+            }
+
             if (!ValidarCPF(usuario.CPF))
                 erros.Add("CPF inválido.");
 
@@ -46,11 +53,16 @@ namespace DesafioERP.API.Services
             return erros;
         }
 
+
         public bool ValidarCPF(string cpf)
         {
             cpf = cpf.Replace(".", "").Replace("-", "");
             if (cpf.Length != 11 || !Regex.IsMatch(cpf, @"^\d{11}$"))
                 return false;
+
+            if (cpf.All(c => c == cpf[0]))
+                return false;
+
             return true;
         }
 
@@ -96,33 +108,81 @@ namespace DesafioERP.API.Services
                 return false;
             }
 
+            if (estado.Length != 2)
+            {
+                return false;
+            }
+
             return true;
         }
 
-        public async Task<Usuario> EditarUsuario([FromBody] Usuario usuario1, string CPF)
+        public async Task<Usuario> EditarUsuario(Usuario usuario, string CPF)
         {
-            var usuario_busca = await _usuarioRepositorio.BuscaPorCPF(CPF);
-            if (usuario_busca == null)
+            var usuarioExistente = await _usuarioRepositorio.BuscaPorCPF(CPF);
+            if (usuarioExistente == null)
             {
-                throw new Exception($"Usuário para o CPF: {CPF} Não foi encontrado.");
+                return null;
             }
 
-            var erros = ValidarCadastro(usuario1);
-            if (erros.Count != 0)
+            if (!string.IsNullOrEmpty(usuario.Nome) && usuario.Nome != usuarioExistente.Nome)
             {
-                usuario_busca.Nome = usuario1.Nome;
-                usuario_busca.Email = usuario1.Email;
-                usuario_busca.Telefone = usuario1.Telefone;
-
-                if (usuario_busca.Senha != usuario1.Senha)
+                if (ValidarNome(usuario.Nome))
                 {
-                    usuario_busca.Senha = _loginService.CriptografarSenha(usuario1.Senha);
+                    usuarioExistente.Nome = usuario.Nome;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(usuario.Email) && usuario.Email != usuarioExistente.Email)
+            {
+                if (ValidarEmail(usuario.Email))
+                {
+                    usuarioExistente.Email = usuario.Email;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(usuario.Telefone) && usuario.Telefone != usuarioExistente.Telefone)
+            {
+                if (ValidarTelefone(usuario.Telefone))
+                {
+                    usuarioExistente.Telefone = usuario.Telefone;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(usuario.Senha) && usuario.Senha != usuarioExistente.Senha)
+            {
+                if (ValidarSenha(usuario.Senha))
+                {
+                    usuarioExistente.Senha = _loginService.CriptografarSenha(usuario.Senha);
+                }
+            }
+
+            if (usuario.Enderecos != null && usuario.Enderecos.Any())
+            {
+                var enderecosValidos = new List<Endereco>();
+
+                foreach (var endereco in usuario.Enderecos)
+                {
+                    if (ValidarEndereco(endereco.Rua, endereco.Numero, endereco.Bairro, endereco.Cidade, endereco.Estado, endereco.CEP))
+                    {
+                        endereco.UsuarioCPF = CPF;
+                        enderecosValidos.Add(endereco);
+                    }
                 }
 
-                usuario_busca.Enderecos = usuario1.Enderecos;
+                if (enderecosValidos.Any())
+                {
+                    usuarioExistente.Enderecos = enderecosValidos;
+                }
             }
 
-            return usuario_busca;
+            return usuarioExistente;
         }
+
+
+
+
+
+
+
     }
 }

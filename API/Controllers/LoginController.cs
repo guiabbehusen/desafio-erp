@@ -47,8 +47,11 @@ namespace DesafioERP.API.Controllers
                 return Unauthorized("Usuário ou senha inválidos.");
             }
 
-            return Ok("Login realizado com sucesso.");
+            string cpfUsuario = await _loginService.ObterCPFPorLogin(loginResource.Login);
+
+            return Ok(new { CPF = cpfUsuario });
         }
+
 
     }
 }

@@ -1,22 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
+import { api } from "../lib/axios";
+import { useNavigate } from "react-router-dom";
 
 export const Login: React.FC = () => {
-    const handleSubmit = (event: React.FormEvent) => {
+    const [usuario, setUsuario] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [backendError, setBackendError] = useState<string>('');
+    const navigate = useNavigate();
+
+    async function doLoginevent(event: React.FormEvent) {
         event.preventDefault();
-        console.log("Formulário enviado!");
-    };
+
+        try {
+            const resposta = await api.post('/api/Login', {
+                "Login": usuario,
+                "Senha": password
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (resposta.status === 200 && resposta.data) {
+                console.log("Resposta da API:", resposta.data); 
+                navigate('/home', { state: { dados: resposta.data } });
+            } else {
+                setBackendError("Usuário ou senha incorretos.");
+            }
+
+        } catch (error) {
+            console.log("error: ", error);
+            setBackendError("Usuário ou senha incorretos.");
+        }
+    }
 
     return (
         <div className="container mt-5">
-            <h1 className="text-center">Bem-vindo de volta</h1>
-            <form className="mt-4" onSubmit={handleSubmit}>
+            <h1 className="text-center">Bem-vindo</h1>
+            <p style={{ color: "red" }}>{backendError}</p>
+
+            <form className="mt-4" onSubmit={doLoginevent}>
                 <div className="mb-3">
-                    <label htmlFor="email" className="form-label">E-mail</label>
-                    <input type="email" className="form-control" id="email" placeholder="Digite seu e-mail" required />
+                    <label htmlFor="usuario" className="form-label">Usuário</label>
+                    <input type="text" className="form-control" id="usuario" placeholder="Digite seu nome de usuário" required value={usuario} onChange={(event) => setUsuario(event.target.value)} />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Senha</label>
-                    <input type="password" className="form-control" id="password" placeholder="Digite sua senha" required />
+                    <input type="password" className="form-control" id="password" placeholder="Digite sua senha" required value={password} onChange={(event) => setPassword(event.target.value)} />
                 </div>
                 <button type="submit" className="btn btn-primary w-100">Entrar</button>
             </form>

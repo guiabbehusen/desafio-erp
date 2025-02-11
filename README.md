@@ -48,3 +48,27 @@ Bônus
 
 OBS: 
 - Colocar o desenvolvimento em um repositório aberto do git.
+
+
+
+
+{
+  "cpf": "98765432100",
+  "nome": "Carlos Pereira",
+  "email": "carlos.pereira@example.com",
+  "telefone": "(21) 99876-5432",
+  "senha": "Carlospereira123@",
+  "login": "carlospereira",
+  "enderecos": [
+    {
+      "cep": "87654-321",
+      "rua": "Avenida Brasil",
+      "numero": "456",
+      "bairro": "Copacabana",
+      "cidade": "Rio de Janeiro",
+      "estado": "RJ",
+      "usuarioCPF": "98765432100"
+    }
+  ]
+}
+

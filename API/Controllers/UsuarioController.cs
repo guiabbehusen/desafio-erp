@@ -42,6 +42,7 @@ namespace DesafioERP.API.Controllers
             return Ok(usuarioCriado);
         }
 
+
         [HttpPut("{CPF}")]
         public async Task<ActionResult<Usuario>> Editar([FromBody] Usuario usuario, string CPF)
         {
@@ -50,9 +51,15 @@ namespace DesafioERP.API.Controllers
             {
                 return NotFound("Usuário não encontrado.");
             }
-            var usuario1 = await _usuarioRepositorio.EditarUsuario(usuarioAtualizado, CPF);
-            return Ok(usuario1);
+
+            var usuarioFinal = await _usuarioRepositorio.EditarUsuario(usuarioAtualizado, CPF);
+            return Ok(usuarioFinal);
         }
+
+
+
+
+
 
         [HttpDelete("{CPF}")]
         public async Task<ActionResult> Apagar(string CPF)
