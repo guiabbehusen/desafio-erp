@@ -11,6 +11,7 @@ namespace DesafioERP.API.Services
         private readonly LoginService _loginService;
         private readonly UsuarioRepositorio _usuarioRepositorio;
 
+
         public UsuarioService(LoginService loginService, UsuarioRepositorio usuarioRepositorio)
         {
             _loginService = loginService;
@@ -116,46 +117,55 @@ namespace DesafioERP.API.Services
             return true;
         }
 
-        public async Task<Usuario> EditarUsuario(Usuario usuario, string CPF)
+        public async Task<Usuario> EditarUsuario(UsuarioResource usuarioResource, string CPF)
         {
             var usuarioExistente = await _usuarioRepositorio.BuscaPorCPF(CPF);
             if (usuarioExistente == null)
             {
-                return null;
+                throw new Exception("Usuário não encontrado.");
             }
+
             try
             {
-                ValidarNome(usuario.Nome);
-                usuarioExistente.Nome = usuario.Nome;
+                ValidarNome(usuarioResource.Nome);
+                usuarioExistente.Nome = usuarioResource.Nome;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
-
                 throw new Exception("Nome inválido. Deve conter no mínimo 4 caracteres.");
             }
+
             try
             {
-                ValidarEmail(usuario.Email);
-                usuarioExistente.Email = usuario.Email;
+                ValidarEmail(usuarioResource.Email);
+                usuarioExistente.Email = usuarioResource.Email;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
-
                 throw new Exception("Email inválido. Ex: email@email.com");
             }
+
             try
             {
-                ValidarTelefone(usuario.Telefone);
-                usuarioExistente.Telefone = usuario.Telefone;
+                ValidarTelefone(usuarioResource.Telefone);
+                usuarioExistente.Telefone = usuarioResource.Telefone;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
-
                 throw new Exception("Telefone inválido. Ex: (12) 93456-7890");
             }
 
-            return usuarioExistente;
+            try
+            {
+                var usuarioAtualizado = await _usuarioRepositorio.AtualizarUsuario(usuarioExistente, CPF);
+                return usuarioAtualizado;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Usuário não pode ser atualizado.");
+            }
         }
+
 
     }
 }

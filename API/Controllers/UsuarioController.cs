@@ -44,16 +44,15 @@ namespace DesafioERP.API.Controllers
 
 
         [HttpPut("{CPF}")]
-        public async Task<ActionResult<Usuario>> Editar([FromBody] Usuario usuario, string CPF)
+        public async Task<ActionResult<Usuario>> Editar([FromBody] UsuarioResource usuarioResource, string CPF)
         {
-            var usuarioAtualizado = await _usuarioService.EditarUsuario(usuario, CPF);
+            var usuarioAtualizado = await _usuarioService.EditarUsuario(usuarioResource, CPF);
             if (usuarioAtualizado == null)
             {
                 return NotFound("Usuário não encontrado.");
             }
 
-            var usuarioFinal = await _usuarioRepositorio.EditarUsuario(usuarioAtualizado, CPF);
-            return Ok(usuarioFinal);
+            return Ok(usuarioAtualizado);
         }
 
 

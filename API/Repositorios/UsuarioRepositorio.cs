@@ -56,25 +56,18 @@ namespace DesafioERP.Repositorios
             return usuario1;
         }
 
-        public async Task<Usuario> EditarUsuario(Usuario usuario, string CPF)
+        public async Task<Usuario> AtualizarUsuario(Usuario usuario, string cpf)
         {
-            var usuarioExistente = await _dbContext.Usuarios
-                                                 .Where(u => u.CPF == CPF)
-                                                 .FirstOrDefaultAsync();
 
-            if (usuarioExistente == null)
-            {
-                return null;
-            }
+            var usuarioExistente = await _dbContext.Usuarios.FirstOrDefaultAsync(x => x.CPF == cpf);
 
-            usuarioExistente.Nome = usuario.Nome;
-            usuarioExistente.Email = usuario.Email;
-            usuarioExistente.Telefone = usuario.Telefone;
-            usuarioExistente.Senha = usuario.Senha;
+            usuarioExistente = usuario;
 
+            _dbContext.Usuarios.Update(usuarioExistente);
             await _dbContext.SaveChangesAsync();
 
             return usuarioExistente;
         }
+
     }
 }
